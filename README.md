@@ -51,6 +51,7 @@ You can apply a Kibana instance in a similar fashion:
 kubectl create -f kibana.yaml
 ```
 In order to access Kibana, port-forward
+
 ![kibana_portforward.png](images/kibana_portforward.png)
 
 and open up `https://localhost:5601` in your browser. You can login with `elastic` user and enter the password obtained with this command as outlined [here](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html):
@@ -98,6 +99,7 @@ kubectl --namespace default port-forward $POD_NAME 2020:2020
 curl http://127.0.0.1:2020
 ```
 ![fluentbit_daemonset.png](images/fluentbit_daemonset.png)
+
 we can go back to the Kibana dashboard and create `logstash*` index pattern:
 
 ![kibana_chart.png](images/kibana_chart.png)
