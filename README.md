@@ -1,7 +1,7 @@
-# ELK-DO-k8s
+# EFK-digitalocean-k8s
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
-A basic deployment of a log monitoring system (Elasticsearch/Fluent-bit/Kibana) to a Digital Ocean Kubernetes cluster using Elastic Cloud on Kubernetes (ECK). [This Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) implementation was followed for this deployment.
+A basic deployment of a log monitoring system (Elasticsearch/FluentBit/Kibana) to a Digital Ocean Kubernetes cluster using Elastic Cloud on Kubernetes (ECK). [This Quickstart](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) implementation was followed for this deployment.
 
 ## Create k8s cluster on Digital Ocean
 
@@ -43,7 +43,7 @@ The operator automatically creates and manages the k8s resources. After checking
 
 ![elasticsearch.png](images/elasticsearch.png)
 
-# Deploy Kibana
+## Deploy Kibana
 
 You can apply a Kibana instance in a similar fashion:
 
@@ -59,7 +59,7 @@ and open up `https://localhost:5601` in your browser. You can login with `elasti
 kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
 
-# Deploy Fluent Bit
+## Deploy Fluent Bit
 
 Lastly you can deploy Fluent Bit [using a helm chart](https://fluentbit.io/blog/2020/12/29/deploying-fluent-bit-k8s-5-minutes/). 
 
@@ -83,7 +83,7 @@ And then you can deploy:
 helm install fluent-bit fluent/fluent-bit -f values.yaml
 ```
 
-After verifying with the following
+After verifying with the following:
 ```
 NAME: fluent-bit
 LAST DEPLOYED: Fri Dec 31 21:12:09 2021
@@ -97,6 +97,7 @@ export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/nam
 kubectl --namespace default port-forward $POD_NAME 2020:2020
 curl http://127.0.0.1:2020
 ```
+![fluentbit_daemonset.png](images/fluentbit_daemonset.png)
 we can go back to the Kibana dashboard and create `logstash*` index pattern:
 
 ![kibana_chart.png](images/kibana_chart.png)
