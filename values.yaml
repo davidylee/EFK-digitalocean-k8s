@@ -124,7 +124,8 @@ dashboards:
   annotations: {}
   namespace: ""
 
-lifecycle: {}
+lifecycle:
+  {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "sleep 20"]
@@ -153,17 +154,17 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 75
-#  targetMemoryUtilizationPercentage: 75
-   ## see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics
+  #  targetMemoryUtilizationPercentage: 75
+  ## see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics
   customRules: []
-#     - type: Pods
-#       pods:
-#         metric:
-#           name: packets-per-second
-#         target:
-#           type: AverageValue
-#           averageValue: 1k
-    ## see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-configurable-scaling-behavior
+  #     - type: Pods
+  #       pods:
+  #         metric:
+  #           name: packets-per-second
+  #         target:
+  #           type: AverageValue
+  #           averageValue: 1k
+  ## see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-configurable-scaling-behavior
   behavior: {}
 #      scaleDown:
 #        policies:
@@ -276,11 +277,9 @@ config:
     [OUTPUT]
         Name es
         Match kube.*
-        Host quickstart-es-http
+        Host 127.0.0.1
+        Port 9200
         Logstash_Format On
-        Retry_Limit False
-        HTTP_User elastic
-        HTTP_Passwd 5sr7n6C8hVom2w0c836sM2iu
         tls On
         tls.verify Off
 

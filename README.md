@@ -37,6 +37,68 @@ You can apply a simple Elasticsearch cluster specification:
 ```
 kubectl create -f elasticsearch.yaml
 ```
-The operator automatically creates and manages the k8s resources. After checking the cluster health and creation progress, you can request Elasticsearch access after getting the credentials as outline [here](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html).
+The operator automatically creates and manages the k8s resources. After checking the cluster health and creation progress, you can request Elasticsearch access after getting the credentials as outline [here](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html). You can verify with port-forward:
+
+![elasticsearch_portforward.png](images/elasticsearch_portforward.png)
 
 ![elasticsearch.png](images/elasticsearch.png)
+
+# Deploy Kibana
+
+You can apply a Kibana instance in a similar fashion:
+
+```
+kubectl create -f kibana.yaml
+```
+In order to access Kibana, port-forward
+![kibana_portforward.png](images/kibana_portforward.png)
+
+and open up `https://localhost:5601` in your browser. You can login with `elastic` user and enter the password obtained with this command as outlined [here](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-kibana.html):
+
+```
+kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+```
+
+# Deploy Fluent Bit
+
+Lastly you can deploy Fluent Bit [using a helm chart](https://fluentbit.io/blog/2020/12/29/deploying-fluent-bit-k8s-5-minutes/). 
+
+By editing this output section of the `values.yaml`, you can specify to forward the logs to Elasticsearch:
+
+```
+outputs:
+    [OUTPUT]
+        Name es
+        Match kube.*
+        Host 127.0.0.1
+        Port 9200
+        Logstash_Format On
+        tls On
+        tls.verify Off
+```
+
+And then you can deploy:
+
+```
+helm install fluent-bit fluent/fluent-bit -f values.yaml
+```
+
+After verifying with the following
+```
+NAME: fluent-bit
+LAST DEPLOYED: Fri Dec 31 21:12:09 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+Get Fluent Bit build information by running these commands:
+
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=fluent-bit,app.kubernetes.io/instance=fluent-bit" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace default port-forward $POD_NAME 2020:2020
+curl http://127.0.0.1:2020
+```
+we can go back to the Kibana dashboard and create `logstash*` index pattern:
+
+![kibana_chart.png](images/kibana_chart.png)
+
+We have successfully deployed EFK stack to the Digital Ocean k8s cluster!
